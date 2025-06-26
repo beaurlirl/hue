@@ -2,10 +2,13 @@
   "name": "hue-agent",
   "version": "1.0.0",
   "description": "Hue - An AI assistant with persistent memory using Ollama and Supabase",
-  "main": "server.ts",
+  "main": "dist/server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
     "dev": "tsx watch server.ts",
-    "start": "tsx server.ts",
+    "start": "node dist/server.js",
     "build": "tsc",
     "test": "jest"
   },
