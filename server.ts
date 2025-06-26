@@ -172,11 +172,13 @@ app.get('/memories/:userId', async (req, res) => {
     const { userId } = req.params;
     const memories = await recallAllMemories(userId);
     res.json({ memories });
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to retrieve memories',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
@@ -186,18 +188,21 @@ app.post('/memories/:userId', async (req, res) => {
     const { key, value } = req.body;
 
     if (!key || !value) {
-      return res.status(400).json({
+      res.status(400).json({
         error: 'Missing required fields: key and value'
       });
+      return;
     }
 
     const memory = await storeMemory(userId, key, value);
     res.json({ memory });
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to store memory',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
@@ -206,11 +211,13 @@ app.get('/memories/:userId/:key', async (req, res) => {
     const { userId, key } = req.params;
     const value = await recallMemory(userId, key);
     res.json({ key, value });
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to retrieve memory',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
@@ -219,11 +226,13 @@ app.delete('/memories/:userId/:key', async (req, res) => {
     const { userId, key } = req.params;
     const success = await deleteMemory(userId, key);
     res.json({ success });
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to delete memory',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
@@ -241,11 +250,13 @@ app.get('/conversations/:userId', async (req, res) => {
     }
 
     res.json({ conversations });
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to retrieve conversations',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
@@ -254,11 +265,13 @@ app.get('/conversations/:userId/stats', async (req, res) => {
     const { userId } = req.params;
     const stats = await getConversationStats(userId);
     res.json({ stats });
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to retrieve conversation stats',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
@@ -267,11 +280,13 @@ app.get('/ollama/status', async (req, res) => {
   try {
     const status = await checkOllamaStatus();
     res.json(status);
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to check Ollama status',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
@@ -280,11 +295,13 @@ app.post('/ollama/pull', async (req, res) => {
     const { model } = req.body;
     const success = await pullModel(model);
     res.json({ success });
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to pull model',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
