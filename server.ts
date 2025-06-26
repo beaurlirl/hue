@@ -83,25 +83,28 @@ app.post('/chat', async (req, res) => {
     const { message, userId, stream = false } = req.body;
 
     if (!message || !userId) {
-      return res.status(400).json({
+      res.status(400).json({
         error: 'Missing required fields: message and userId'
       });
+      return;
     }
 
     // Check Ollama status
     const ollamaStatus = await checkOllamaStatus();
     if (!ollamaStatus.isRunning) {
-      return res.status(503).json({
+      res.status(503).json({
         error: 'Ollama is not running',
         details: ollamaStatus.error
       });
+      return;
     }
 
     if (!ollamaStatus.modelAvailable) {
-      return res.status(503).json({
+      res.status(503).json({
         error: 'Model not available',
         details: ollamaStatus.error
       });
+      return;
     }
 
     // Recall recent conversations and memories
@@ -131,10 +134,12 @@ app.post('/chat', async (req, res) => {
         await logConversation(userId, message, fullResponse);
         
         res.end();
+        return;
       } catch (streamError) {
         console.error('Stream error:', streamError);
         res.write(`\n\n${errorResponses.modelError}`);
         res.end();
+        return;
       }
     } else {
       // Regular response
@@ -146,9 +151,10 @@ app.post('/chat', async (req, res) => {
 
       res.json({
         response: formattedResponse,
-        conversationId: 'generated-id', // You might want to return the actual ID from logConversation
+        conversationId: 'generated-id',
         timestamp: new Date().toISOString()
       });
+      return;
     }
   } catch (error) {
     console.error('Chat error:', error);
@@ -156,6 +162,7 @@ app.post('/chat', async (req, res) => {
       error: 'Failed to process chat request',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
