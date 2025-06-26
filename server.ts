@@ -69,11 +69,13 @@ app.post('/init', async (req, res) => {
   try {
     await initializeDatabase();
     res.json({ message: 'Database initialized successfully' });
+    return;
   } catch (error) {
     res.status(500).json({
       error: 'Failed to initialize database',
       details: error instanceof Error ? error.message : 'Unknown error'
     });
+    return;
   }
 });
 
